@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Fill the whole screen incl. the notch area; lock zoom for a native feel. -->
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+
+  <title>Flappy Bird</title>
+  <meta name="description" content="A pixel-perfect Flappy Bird, made for iPhone." />
+
+  <!-- iOS: run fullscreen when added to the Home Screen. -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Flappy Bird" />
+  <meta name="theme-color" content="#4ec0ca" />
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- The whole screen is the play surface; a tap anywhere flaps. -->
+  <canvas id="game"></canvas>
+
+  <!-- Loading screen shown until every asset is decoded. -->
+  <div id="loading">
+    <div class="title">FLAPPY BIRD</div>
+    <div class="bar"><div id="bar-fill"></div></div>
+    <div class="hint">loading…</div>
+  </div>
+
+  <!-- Shown if the browser can't run the game (e.g. no ES modules / canvas). -->
+  <noscript><div id="loading"><div class="title">Please enable JavaScript</div></div></noscript>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
