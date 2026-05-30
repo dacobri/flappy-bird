@@ -32,7 +32,38 @@ export class Game {
     this.score = 0;
     this.flash = 0;
     this.shakeT = 0;
+    this.frozen = false;   // demo/screenshot freeze
     this.newRound();
+  }
+
+  // Jump straight to a state for screenshots/testing, e.g. ?demo=over&score=23&bg=night
+  enterDemo(kind, params) {
+    const bg = params.get('bg');
+    if (bg === 'night' || bg === 'day') { this.bgKey = `bg-${bg}`; this.sky = Background.sampleSky(this.img[this.bgKey]); }
+    const pc = params.get('pipe'); if (pc) this.pipeColor = pc;
+    const bc = params.get('bird'); if (bc) { this.birdColor = bc; this.bird.color = bc; }
+    const gt = this.r.groundTop;
+
+    if (kind === 'play' || kind === 'over') {
+      this.state = 'play';
+      this.pipes = [];
+      let x = 130;
+      for (const c of [gt - 175, gt - 265, gt - 150]) { this.pipes.push(new PipePair(x, c)); x += CONFIG.PIPE_SPACING; }
+      this.bird.reset(Math.round(this.r.W * CONFIG.BIRD_X_RATIO), Math.round(gt * 0.4));
+      this.score = parseInt(params.get('score') || '0', 10) || 0;
+      this.frozen = true;
+    }
+    if (kind === 'over') {
+      this.bird.alive = false;
+      this.bird.y = gt - CONFIG.BIRD_H;
+      this.bird.angle = CONFIG.BIRD_DOWN_ANGLE;
+      this.best = parseInt(params.get('best') || '0', 10) || Math.floor(this.score * 0.8);
+      if (this.score > this.best) { this.isNew = true; this.best = this.score; }
+      this.medal = medalFor(this.score);
+      this.state = 'over';
+      this.overTime = 3;
+      this.frozen = true;
+    }
   }
 
   // ---- persistence ----
@@ -116,6 +147,7 @@ export class Game {
 
   update(dt) {
     this.time += dt;
+    if (this.frozen) return;
     if (this.flash > 0) this.flash = Math.max(0, this.flash - dt / 0.3);
     if (this.shakeT > 0) this.shakeT = Math.max(0, this.shakeT - dt);
 

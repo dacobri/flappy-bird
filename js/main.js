@@ -45,6 +45,8 @@ async function boot() {
   // --- Game + input ---
   const game = new Game();
   window.__game = game; // expose for debugging / automated playtests
+  const demo = new URLSearchParams(location.search).get('demo');
+  if (demo) game.enterDemo(demo, new URLSearchParams(location.search));
   Input.init(canvas, () => { Audio.unlock(); game.tap(); });
 
   // Keep the canvas matched to the screen (rotation, iOS chrome show/hide).
